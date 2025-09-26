@@ -170,13 +170,22 @@ def deploy_to_database(fact_table, dim_tables):
         
         print("\n🎉 Database deployment completed successfully!")
         
-        # # Verify deployment
+        # # # Verify deployment
         # print("\n🔍 Verifying deployment...")
         # with engine.connect() as connection:
         #     for table_name in list(dim_tables.keys()) + ['loans_fact']:
         #         count_result = connection.execute(text(f"SELECT COUNT(*) FROM {table_name}"))
         #         count = count_result.fetchone()[0]
         #         print(f"   📊 {table_name}: {count:,} records in database")
+        # # Verify deployment
+        print("\n🔍 Verifying deployment...")
+        with engine.connect() as connection:
+            fact_table_name = 'loans_fact_yourname'  
+            schema = 'dbo'
+            for table_name in list(dim_tables.keys()) + [fact_table_name]:
+                sql = text(f"SELECT COUNT(*) FROM [{schema}].[{table_name}]")
+                count = connection.execute(sql).scalar()
+                print(f"   📊 {schema}.{table_name}: {count:,} records in database")
         
         return True
         
